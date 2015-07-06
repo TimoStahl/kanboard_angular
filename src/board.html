@@ -1,0 +1,33 @@
+<table>
+  <tr>
+    <td>
+      <button ng-disabled="column_id <= 1" ng-click="previousColumn()" class="btn"><span class="icon-chevron-left"></span>Previous Column</button>
+    </td>
+    <td>{{project_name}}
+      <br>{{column_name}}</td>
+    <td>
+      <button ng-disabled="column_id >= column_number" ng-click="nextColumn()" class="btn">Next Column<span class="icon-chevron-right"></span></button>
+    </td>
+  </tr>
+
+</table>
+
+<a href="#/task/show/{{task.id}}" ng-repeat="task in tasks" >
+<div class="task" ng-style="{'background-color':'{{task.color_id}}'}">
+
+  <span class="task_id">#{{task.id}}</span> <span class="task_title">{{task.title}}</span>
+</div>
+</a>
+
+<!--<p>ProjectID: {{project_id}}</span>
+</p>
+<p>ProjectName: {{project_name}}</span>
+</p>
+<p>ColumnID: {{column_id}}</span>
+</p>
+<p>ColumnName: {{column_name}}</span>
+</p>
+<p>ColumnNumber: {{column_number}}</span>
+</p>-->
+
+<a href="#/" class="btn">Back</a>

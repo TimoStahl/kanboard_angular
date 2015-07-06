@@ -1,0 +1,14 @@
+@import '//netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/css/bootstrap-combined.min.css';
+.projectlist tbody tr:hover {
+    background: lightgrey;
+}
+
+.task {
+    border-style: solid;
+    border-width: 1px;
+    border-color: grey;
+    margin: 5px;
+    padding: 5px;
+}
+
+.task_id {font-weight:bold;}
