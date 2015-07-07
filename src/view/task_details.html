@@ -1,7 +1,8 @@
-<div class="task" ng-style="{'background-color':'{{task.color_id}}'}">
+<md-toolbar layout="row"><span ng-include="'view/menu.html'">
   <h2>{{task.title}}</h2>
+  </md-toolbar>
   <p>ID: {{task.id}}</p>
   <blockquote>{{task.description}}</blockquote>
-</div>
+
 
 <a href="#/board/show/{{task.project_id}}/{{task.column_id}}" class="btn">Back</a>

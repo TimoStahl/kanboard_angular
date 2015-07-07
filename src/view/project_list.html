@@ -1,4 +1,6 @@
+<md-toolbar layout="row"><span ng-include="'view/menu.html'">
 <h2>Projects</h2>
+</md-toolbar>
 <input type="text" ng-model="projectList.search" class="search-query" id="projects_search" placeholder="Search">
 <table class="projectlist">
   <thead>
@@ -13,7 +15,9 @@
       <td><a ng-href="#/board/show/{{project.id}}/1">{{project.name}}</a></td>
       <td>{{project.description}}</td>
       <td>
-        <a ng-href="#/board/show/{{project.id}}/1"><i class="icon-chevron-right"></i></a>
+        <a ng-href="#/board/show/{{project.id}}/1"><ng-md-icon icon="explore"></ng-md-icon></a>
+        <a ng-href="#/board/overdue/{{project.id}}"><ng-md-icon icon="alarm"></ng-md-icon></a>
+        <a ng-href="#/board/activity/{{project.id}}"><ng-md-icon icon="history"></ng-md-icon></a>
       </td>
     </tr>
   </tbody>

@@ -1,28 +1,39 @@
-angular.module('project', ['ngRoute'])
+angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons'])
 
-
-.service('Projects', function() {
-
-})
 
 .config(function($routeProvider) {
   $routeProvider
     .when('/', {
       controller: 'ProjectListController as projectList',
-      templateUrl: 'list.html'
+      templateUrl: 'view/project_list.html'
     })
     .when('/board/show/:projectId/:projectColumn', {
       controller: 'ShowProjectController as showProject',
-      templateUrl: 'board.html'
+      templateUrl: 'view/board_show.html'
     })
     .when('/task/show/:taskId', {
       controller: 'ShowTaskController as showTask',
-      templateUrl: 'task.html'
+      templateUrl: 'view/task_details.html'
+    })
+    .when('/board/overdue/:projectId', {
+      controller: 'ShowOverdueController as overdueBoard',
+      templateUrl: 'view/board_overdue.html'
     })
     .otherwise({
       redirectTo: '/'
     });
 })
+
+.factory('navigation', ['$location','$rootScope', function ($location,$rootScope) {
+        return {
+            home: function () {
+                $location.path('/');
+                $location.replace();
+                console.log("navi home");
+                return;
+            }
+        }
+    }])
 
 .factory('dataFactory', ['$http', function($http) {
 
@@ -50,32 +61,41 @@ angular.module('project', ['ngRoute'])
     return $http.post(urlBase+'?getProjectById', request, config);
   };
   
+  dataFactory.getProjectActivity = function(projectid) {
+    var request = '{"jsonrpc": "2.0", "method": "getProjectActivity", "id": 1,"params": { "project_id": ' + projectid + ' }}';
+    return $http.post(urlBase+'?getProjectActivity', request, config);
+  };
+  
   dataFactory.getTaskById = function(taskid) {
     var request = '{"jsonrpc": "2.0", "method": "getTask", "id": 1,"params": { "task_id": ' + taskid + ' }}';
     return $http.post(urlBase+'?getTask', request, config);
+  };
+  
+  dataFactory.getOverdueTasks = function() {
+    var request = '{"jsonrpc": "2.0", "method": "getOverdueTasks", "id": 1}';
+    return $http.post(urlBase+'?getOverdueTasks', request, config);
   };
 
 
   return dataFactory;
 }])
 
-.controller('ProjectListController', ['$scope', 'dataFactory',
-  function($scope, dataFactory) {
+.controller('ProjectListController', function($location,$routeParams, $route, $scope, navigation, dataFactory) {
+    $scope.$navigation = navigation;
     var projectList = this;
 
     dataFactory.getProjects()
       .success(function(request) {
         projectList.projects = request.result;
-        //console.log(projectList.projects);
       })
       .error(function(error) {
         console.log(error);
       });
 
-  }
-])
+})
 
-.controller('ShowProjectController', function($routeParams, $route, $scope, dataFactory) {
+.controller('ShowProjectController', function($location,$routeParams, $route, $scope, navigation, dataFactory) {
+  $scope.$navigation = navigation;
   $scope.project_id = $routeParams.projectId;
   $scope.column_id = $routeParams.projectColumn;
 
@@ -83,8 +103,6 @@ angular.module('project', ['ngRoute'])
   var board;
   var numberOfColumns;
   $scope.tasks = [];
-
-
 
   dataFactory.getProjectById($routeParams.projectId)
     .success(function(request) {
@@ -102,9 +120,7 @@ angular.module('project', ['ngRoute'])
       $scope.column_number = numberOfColumns;
       $scope.column_name = board[0].columns[$routeParams.projectColumn - 1].title;
 
-      //console.log("start loop");
       for (var i = 0; i < board.length; i++) {
-        //console.log("new Swimlane");
         for (var j = 0; j < board[i].columns[$routeParams.projectColumn - 1].tasks.length; j++) {
           $scope.tasks.push(board[i].columns[$routeParams.projectColumn - 1].tasks[j]);
         }
@@ -132,8 +148,33 @@ angular.module('project', ['ngRoute'])
   }
   
 })
+.controller('ShowOverdueController', function($location,$routeParams, $route, $scope, navigation, dataFactory) {
+  $scope.$navigation = navigation;
+  var project_id = $routeParams.projectId;
+  
+  var overdue;
 
-.controller('ShowTaskController', function($routeParams, $route, $scope, dataFactory) {
+  $scope.tasks = [];
+
+  dataFactory.getOverdueTasks()
+    .success(function(request) {
+      overdue = request.result;
+      
+      for (var i = 0; i < overdue.length; i++) {
+        if(overdue[i].project_id == project_id){
+          $scope.tasks.push(overdue[i]);
+          $scope.project_name = overdue[i].project_name;
+        }
+      }
+
+    })
+    .error(function(error) {
+      console.log(error);
+    });
+
+})
+.controller('ShowTaskController', function($location,$routeParams, $route, $scope, navigation, dataFactory) {
+  $scope.$navigation = navigation;
   
   var id = $routeParams.taskId;
   $scope.task;

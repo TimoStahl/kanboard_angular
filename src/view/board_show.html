@@ -1,0 +1,27 @@
+<md-toolbar layout="row"><span ng-include="'view/menu.html'"></span>
+  <md-button ng-disabled="column_id <= 1" ng-click="previousColumn()" class="btn">
+    <md-icon class="glyphicon glyphicon-chevron-left"></md-icon>
+  </md-button>
+  {{project_name}} - {{column_name}}
+  <md-button ng-disabled="column_id >= column_number" ng-click="nextColumn()" class="btn">
+    <md-icon class="glyphicon glyphicon-chevron-right"></md-icon>
+  </md-button>
+</md-toolbar>
+<div class="demo-swipe" md-swipe-left="nextColumn()" md-swipe-right="previousColumn()">
+  <a href="#/task/show/{{task.id}}" ng-repeat="task in tasks" ng-include="'view/task_box.html'">
+
+  </a>
+</div>
+
+<!--<p>ProjectID: {{project_id}}</span>
+</p>
+<p>ProjectName: {{project_name}}</span>
+</p>
+<p>ColumnID: {{column_id}}</span>
+</p>
+<p>ColumnName: {{column_name}}</span>
+</p>
+<p>ColumnNumber: {{column_number}}</span>
+</p>-->
+
+<a href="#/"><md-button>Back</md-button></a>
