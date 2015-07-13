@@ -1,7 +1,5 @@
-<md-toolbar layout="row"><span ng-include="'view/menu.html'"><h2>Overdue in {{project_name}}</h2></md-toolbar>
+<md-toolbar layout="row"><span ng-include="'view/menu.html'"></span><h1 class="md-title">Overdue in {{project_name}}</h1></md-toolbar>
 
-<a href="#/task/show/{{task.id}}" ng-repeat="task in tasks" ng-include="'view/task_box.html'">
+<span ng-repeat="task in tasks" ng-include="'view/task_box.html'">
 
-</a>
-
-<a href="#/" class="btn">Back</a>
+<a href="#/"><md-button>Back</md-button></a>

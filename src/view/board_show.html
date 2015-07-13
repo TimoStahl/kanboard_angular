@@ -1,16 +1,16 @@
 <md-toolbar layout="row"><span ng-include="'view/menu.html'"></span>
   <md-button ng-disabled="column_id <= 1" ng-click="previousColumn()" class="btn">
-    <md-icon class="glyphicon glyphicon-chevron-left"></md-icon>
+    <ng-md-icon icon="keyboard_arrow_left"></ng-md-icon>
   </md-button>
-  {{project_name}} - {{column_name}}
+  <h1 class="md-title">{{project_name}} - {{column_name}}</h1>
   <md-button ng-disabled="column_id >= column_number" ng-click="nextColumn()" class="btn">
-    <md-icon class="glyphicon glyphicon-chevron-right"></md-icon>
+        <ng-md-icon icon="keyboard_arrow_right"></ng-md-icon>
   </md-button>
 </md-toolbar>
 <div class="demo-swipe" md-swipe-left="nextColumn()" md-swipe-right="previousColumn()">
-  <a href="#/task/show/{{task.id}}" ng-repeat="task in tasks" ng-include="'view/task_box.html'">
+  <span ng-repeat="task in tasks" ng-include="'view/task_box.html'">
 
-  </a>
+  </span>
 </div>
 
 <!--<p>ProjectID: {{project_id}}</span>
