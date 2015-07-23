@@ -11,3 +11,13 @@
 }
 
 .task_id {font-weight:bold;}
+
+ng-md-icon {
+  fill: currentColor;
+  vertical-align: middle;
+  display: inline-block;
+  line-height: 1;
+  margin-top: auto;
+  margin-bottom: auto;
+  background-repeat: no-repeat no-repeat;
+}

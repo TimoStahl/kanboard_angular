@@ -111,6 +111,7 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
   $scope.$navigation = navigation;
   var projectList = this;
   var api_id = 1;
+  
   dataFactory.getProjects(api_id)
     .success(function(request) {
       projectList.projects = request.result;

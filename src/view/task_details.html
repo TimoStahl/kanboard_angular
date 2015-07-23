@@ -1,7 +1,9 @@
-<md-toolbar layout="row"><span ng-include="'view/menu.html'">
-  <h2>{{task.title}}</h2>
+<md-toolbar layout="row"><span ng-include="'view/menu.html'"></span>
+  <h1 class="md-title">{{task.title}}</h1>
   </md-toolbar>
   <p>ID: {{task.id}}</p>
+  
+  <p>Description:</p>
   <blockquote>{{task.description}}</blockquote>
 
 
