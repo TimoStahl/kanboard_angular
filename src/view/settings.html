@@ -1,0 +1,7 @@
+<md-toolbar layout="row"><span ng-include="'view/menu.html'"></span>
+  <h1 class="md-title">Settings</h1>
+  </md-toolbar>
+  <p>Endpoints</p>
+  <ul>
+      <li ng-repeat="endpoint in endpoints">{{endpoint.name}} ({{endpoint.url}})</li>
+  </ul>
