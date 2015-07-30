@@ -11,6 +11,14 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
       controller: 'SettingsController as settings',
       templateUrl: 'view/settings.html'
     })
+    .when('/settings/endpoint', {
+      controller: 'SettingsEndpointController as settings',
+      templateUrl: 'view/settings_endpoint.html'
+    })
+    .when('/settings/endpoint/:api_id', {
+      controller: 'SettingsEndpointController as settings',
+      templateUrl: 'view/settings_endpoint.html'
+    })
     .when('/:api_id/board/show/:projectId/:projectColumn', {
       controller: 'ShowProjectController as showProject',
       templateUrl: 'view/board_show.html'
@@ -42,6 +50,17 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
       console.log("navi settings");
       return;
     },
+    settings_endpoint: function(api_id) {
+      if (api_id >= 0) {
+        $location.path('/settings/endpoint/' + api_id);
+      }
+      else {
+        $location.path('/settings/endpoint');
+      }
+      $location.replace();
+      console.log("navi settings endpoint");
+      return;
+    },
     task: function(api_id, task_id) {
       $location.path('/' + api_id + '/task/show/' + task_id);
       $location.replace();
@@ -68,7 +87,7 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
     }
     else {
       items = JSON.parse(items);
-      for(var i = 0; i < items.length; i++){
+      for (var i = 0; i < items.length; i++) {
         items[i].id = i;
       }
     }
@@ -271,10 +290,11 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
 
         //delete from storage
         var items_new = new Array();
-        for(var i = 0; i < items.length; i++){
-          if(i == endpoint.id){
+        for (var i = 0; i < items.length; i++) {
+          if (i == endpoint.id) {
             //nothing
-          } else {
+          }
+          else {
             items_new.push(items[i]);
           }
         }
@@ -293,6 +313,31 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
       }, function() {
         //$scope.alert = 'Nothing changed.';
       });
+    };
+
+  })
+  .controller('SettingsEndpointController', function($location, $routeParams, $route, $scope, navigation, dataFactory, $mdDialog, $mdToast) {
+    $scope.$navigation = navigation;
+    var items;
+
+    if ($routeParams.api_id >= 0) {
+      var api_id = parseInt($routeParams.api_id);
+      items = dataFactory.getEndpoints();
+      $scope.endpoint = items[api_id];
+    }
+
+    $scope.save = function() {
+      if ($scope.endpoint.id >= 0) {
+        items = dataFactory.getEndpoints();
+        items[$scope.endpoint.id] = $scope.endpoint;
+        dataFactory.setEndpoints(items);
+      }
+      else {
+        items = dataFactory.getEndpoints();
+        items.push($scope.endpoint);
+        dataFactory.setEndpoints(items);
+      }
+      navigation.settings();
     };
 
   });
