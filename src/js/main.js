@@ -43,7 +43,7 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
       return;
     },
     task: function(api_id, task_id) {
-      $location.path('/'+ api_id + '/task/show/' + task_id);
+      $location.path('/' + api_id + '/task/show/' + task_id);
       $location.replace();
       console.log("navi task");
       return;
@@ -56,15 +56,28 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
   var dataFactory = {};
 
   dataFactory.getEndpoints = function() {
-    return [{
-      "name": "Testpage",
-      "token": "09d2645659634f08456dd53fcd12bd0e2122873a6585560ea6d4a3410095",
-      "url": "http://litzbarski.de/todo_dev/jsonrpc.php"
-    }, {
-      "name": "Kanboard.net Demopage",
-      "token": "da2776e2c7ca07b2b1169099550aa4a197024f2f7aac21212682240acc3f",
-      "url": "http://demo.kanboard.net/jsonrpc.php"
-    }];
+    var items = localStorage.getItem("endpoints");
+
+    if (items === null) {
+      items = [{
+        "i": "0",
+        "name": "Kanboard.net Demopage",
+        "token": "da2776e2c7ca07b2b1169099550aa4a197024f2f7aac21212682240acc3f",
+        "url": "http://demo.kanboard.net/jsonrpc.php"
+      }];
+    }
+    else {
+      items = JSON.parse(items);
+      for(var i = 0; i < items.length; i++){
+        items[i].id = i;
+      }
+    }
+
+    return items;
+  };
+
+  dataFactory.setEndpoints = function(endpoints) {
+    return localStorage.setItem("endpoints", JSON.stringify(endpoints));
   };
 
   dataFactory.getBaseUrl = function(api_id) {
@@ -84,32 +97,32 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
   };
 
   dataFactory.getProjects = function(api_id) {
-    var request = '{"jsonrpc": "2.0", "method": "getAllProjects", "id": '+ api_id +'}';
+    var request = '{"jsonrpc": "2.0", "method": "getAllProjects", "id": ' + api_id + '}';
     return $http.post(this.getBaseUrl(api_id) + '?getAllProjects', request, this.createConfig(api_id));
   };
 
   dataFactory.getBoard = function(api_id, projectid) {
-    var request = '{"jsonrpc": "2.0", "method": "getBoard", "id": '+ api_id +',"params": { "project_id": ' + projectid + ' }}';
+    var request = '{"jsonrpc": "2.0", "method": "getBoard", "id": ' + api_id + ',"params": { "project_id": ' + projectid + ' }}';
     return $http.post(this.getBaseUrl(api_id) + '?getBoard', request, this.createConfig(api_id));
   };
 
   dataFactory.getProjectById = function(api_id, projectid) {
-    var request = '{"jsonrpc": "2.0", "method": "getProjectById", "id": '+ api_id +',"params": { "project_id": ' + projectid + ' }}';
+    var request = '{"jsonrpc": "2.0", "method": "getProjectById", "id": ' + api_id + ',"params": { "project_id": ' + projectid + ' }}';
     return $http.post(this.getBaseUrl(api_id) + '?getProjectById', request, this.createConfig(api_id));
   };
 
   dataFactory.getProjectActivity = function(api_id, projectid) {
-    var request = '{"jsonrpc": "2.0", "method": "getProjectActivity", "id": '+ api_id +',"params": { "project_id": ' + projectid + ' }}';
+    var request = '{"jsonrpc": "2.0", "method": "getProjectActivity", "id": ' + api_id + ',"params": { "project_id": ' + projectid + ' }}';
     return $http.post(this.getBaseUrl(api_id) + '?getProjectActivity', request, this.createConfig(api_id));
   };
 
   dataFactory.getTaskById = function(api_id, taskid) {
-    var request = '{"jsonrpc": "2.0", "method": "getTask", "id": '+ api_id +',"params": { "task_id": ' + taskid + ' }}';
+    var request = '{"jsonrpc": "2.0", "method": "getTask", "id": ' + api_id + ',"params": { "task_id": ' + taskid + ' }}';
     return $http.post(this.getBaseUrl(api_id) + '?getTask', request, this.createConfig(api_id));
   };
 
   dataFactory.getOverdueTasks = function(api_id) {
-    var request = '{"jsonrpc": "2.0", "method": "getOverdueTasks", "id": '+ api_id +'}';
+    var request = '{"jsonrpc": "2.0", "method": "getOverdueTasks", "id": ' + api_id + '}';
     return $http.post(this.getBaseUrl(api_id) + '?getOverdueTasks', request, this.createConfig(api_id));
   };
 
@@ -120,7 +133,7 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
 .controller('ProjectListController', function($location, $routeParams, $route, $scope, navigation, dataFactory) {
   $scope.$navigation = navigation;
   var projectList = this;
-  
+
   $scope.endpoints = dataFactory.getEndpoints();
 
   for (var i = 0; i < $scope.endpoints.length; i++) {
@@ -238,9 +251,48 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
       });
 
   })
-  .controller('SettingsController', function($location, $routeParams, $route, $scope, navigation, dataFactory) {
+  .controller('SettingsController', function($location, $routeParams, $route, $scope, navigation, dataFactory, $mdDialog, $mdToast) {
     $scope.$navigation = navigation;
 
-    $scope.endpoints = dataFactory.getEndpoints();
+    var items = dataFactory.getEndpoints();
+    $scope.endpoints = items;
+
+    $scope.showDeleteConfirm = function(ev, endpoint) {
+      var confirm = $mdDialog.confirm()
+        .parent(angular.element(document.body))
+        .title('Would you like to delete your endpoint?')
+        .content('Name: ' + endpoint.name)
+        .ariaLabel('Delete')
+        .ok('Yes')
+        .cancel('No')
+        .targetEvent(ev);
+
+      $mdDialog.show(confirm).then(function() {
+
+        //delete from storage
+        var items_new = new Array();
+        for(var i = 0; i < items.length; i++){
+          if(i == endpoint.id){
+            //nothing
+          } else {
+            items_new.push(items[i]);
+          }
+        }
+        console.log(items);
+        console.log(items_new);
+        dataFactory.setEndpoints(items_new);
+
+        //refresh list
+        $scope.endpoints = dataFactory.getEndpoints();
+
+        $mdToast.show(
+          $mdToast.simple()
+          .content('Deleted!')
+          .hideDelay(3000)
+        );
+      }, function() {
+        //$scope.alert = 'Nothing changed.';
+      });
+    };
 
   });
