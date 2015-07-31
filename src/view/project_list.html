@@ -17,12 +17,17 @@
       <h3><a ng-href="#/{{ep.id}}/board/show/{{project.id}}">{{project.name}}</a></h3>
       <p>{{project.description}}</p>
     </div>
-    <md-button class="md-fab  md-mini" ng-href="#/{{ep.id}}/board/show/{{project.id}}">
+    <md-button class="md-fab  md-mini md-primary" ng-href="#/{{ep.id}}/board/show/{{project.id}}">
       <ng-md-icon icon="explore"></ng-md-icon>
     </md-button>
-    <md-button class="md-fab  md-mini" ng-href="#/{{ep.id}}/board/overdue/{{project.id}}">
+    <md-button class="md-fab  md-mini md-primary" ng-href="#/{{ep.id}}/board/overdue/{{project.id}}">
       <ng-md-icon icon="alarm"></ng-md-icon>
     </md-button>
+    <md-button class="md-fab  md-mini md-primary" ng-href="{{project.url.board}}">
+      <ng-md-icon icon="open_in_browser"></ng-md-icon>
+    </md-button>
+    
+    
     <!--<md-button class="md-fab  md-mini" ng-href="#/{{ep.id}}/board/activity/{{project.id}}">
       <ng-md-icon icon="history"></ng-md-icon>
     </md-button>-->

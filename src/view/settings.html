@@ -16,10 +16,10 @@
       <h3>{{endpoint.name}}</h3>
       <p>{{endpoint.url}}</p>
     </div>
-    <md-button class="md-fab  md-mini" ng-click="$navigation.settings_endpoint(endpoint.id)">
+    <md-button class="md-fab md-mini md-primary" ng-click="$navigation.settings_endpoint(endpoint.id)">
       <ng-md-icon icon="mode_edit"></ng-md-icon>
     </md-button>
-    <md-button class="md-fab  md-mini" ng-click="showDeleteConfirm($event,endpoint)">
+    <md-button class="md-fab md-mini md-primary" ng-click="showDeleteConfirm($event,endpoint)">
       <ng-md-icon icon="delete"></ng-md-icon>
     </md-button>
   </md-list-item>

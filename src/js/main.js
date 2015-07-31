@@ -1,6 +1,13 @@
 angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
 
-
+.config( [
+    '$compileProvider',
+    function( $compileProvider )
+    {   
+        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
+        // Angular before v1.2 uses $compileProvider.urlSanitizationWhitelist(...)
+    }
+])
 .config(function($routeProvider) {
   $routeProvider
     .when('/', {

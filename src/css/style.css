@@ -1,3 +1,7 @@
+/*body {
+    min-width:400px;
+}*/
+
 .task {
     border-style: solid;
     border-width: 1px;
@@ -58,4 +62,8 @@ md-chips .md-chips {
     color: #D8000C;
     background-color: #FFBABA;
     background-image: url('../img/error.png');
+}
+
+.md-button {
+    margin: 2px;
 }
