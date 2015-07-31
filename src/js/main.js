@@ -233,7 +233,6 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
             $scope.tasks.push(overdue[i]);
           }
         }
-        console.log($scope.tasks.length);
       })
       .error(function(error) {
         console.log(error);
@@ -294,8 +293,6 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
             items_new.push(items[i]);
           }
         }
-        console.log(items);
-        console.log(items_new);
         dataFactory.setEndpoints(items_new);
 
         //refresh list

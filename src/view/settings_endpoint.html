@@ -4,19 +4,22 @@
     Endpoint</h1>
 </md-toolbar>
 
-
+<form name="epform">
 <md-input-container flex>
   <label>Name</label>
-  <input ng-model="endpoint.name">
+  <input ng-model="endpoint.name" required>
 </md-input-container>
 <md-input-container flex>
   <label>URL</label>
-  <input ng-model="endpoint.url">
+  <input type="url" ng-model="endpoint.url" required>
 </md-input-container>
 <md-input-container flex>
   <label>Token</label>
-  <input ng-model="endpoint.token">
+  <input ng-model="endpoint.token" required>
 </md-input-container>
 
+
 <md-button ng-click="$navigation.settings()">Cancel</md-button>
-<md-button class="md-raised" ng-click="save()">Save</md-button>
+<md-button ng-disabled="epform.$invalid" class="md-raised" ng-click="save()">Save</md-button>
+
+</form>
