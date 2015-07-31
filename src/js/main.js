@@ -228,14 +228,21 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
     dataFactory.getOverdueTasks(api_id)
       .success(function(request) {
         overdue = request.result;
-
         for (var i = 0; i < overdue.length; i++) {
           if (overdue[i].project_id == project_id) {
             $scope.tasks.push(overdue[i]);
-            $scope.project_name = overdue[i].project_name;
           }
         }
+        console.log($scope.tasks.length);
+      })
+      .error(function(error) {
+        console.log(error);
+      });
 
+    dataFactory.getProjectById(api_id, project_id)
+      .success(function(request) {
+        var project = request.result;
+        $scope.project_name = project.name;
       })
       .error(function(error) {
         console.log(error);

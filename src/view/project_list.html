@@ -8,7 +8,8 @@
 </md-input-container>
 
 <md-list>
-  <md-subheader class="md-no-sticky" ng-repeat-start="ep in endpoints">{{ep.name}}</md-subheader>
+  <md-subheader class="md-no-sticky" ng-repeat-start="ep in endpoints track by $index">{{ep.name}}</md-subheader>
+  <div ng-hide="ep.projects.length > 0" class="warning">Can't access projects</div>
   <md-list-item ng-repeat-end class="md-3-line" ng-repeat="project in ep.projects | filter:projectList.search | orderBy:'name'">
     <!--<img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />-->
     <ng-md-icon icon="view_module" class="md-avatar"></ng-md-icon>
