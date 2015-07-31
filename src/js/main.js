@@ -19,7 +19,7 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
       controller: 'SettingsEndpointController as settings',
       templateUrl: 'view/settings_endpoint.html'
     })
-    .when('/:api_id/board/show/:projectId/:projectColumn', {
+    .when('/:api_id/board/show/:projectId', {
       controller: 'ShowProjectController as showProject',
       templateUrl: 'view/board_show.html'
     })
@@ -173,13 +173,13 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
 .controller('ShowProjectController', function($location, $routeParams, $route, $scope, navigation, dataFactory) {
     $scope.$navigation = navigation;
     $scope.project_id = $routeParams.projectId;
-    $scope.column_id = $routeParams.projectColumn;
+    $scope.selectedIndex = 1;
+    var numberOfColumns;
 
     var api_id = parseInt($routeParams.api_id) + 1;
     $scope.api_id = $routeParams.api_id;
     var project;
     var board;
-    var numberOfColumns;
     $scope.tasks = [];
 
     dataFactory.getProjectById(api_id, $routeParams.projectId)
@@ -193,35 +193,24 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64'])
 
     dataFactory.getBoard(api_id, $routeParams.projectId)
       .success(function(request) {
+        $scope.board = request.result;
         board = request.result;
+        $scope.columns = board[0].columns;
         numberOfColumns = board[0].columns.length;
-        $scope.column_number = numberOfColumns;
-        $scope.column_name = board[0].columns[$routeParams.projectColumn - 1].title;
-
-        for (var i = 0; i < board.length; i++) {
-          for (var j = 0; j < board[i].columns[$routeParams.projectColumn - 1].tasks.length; j++) {
-            $scope.tasks.push(board[i].columns[$routeParams.projectColumn - 1].tasks[j]);
-          }
-        }
-        //console.log($scope.tasks);
-
       })
       .error(function(error) {
         console.log(error);
       });
 
-
     $scope.nextColumn = function() {
-      if (numberOfColumns > $scope.column_id) {
-        $routeParams.projectColumn = $routeParams.projectColumn * 1 + 1;
-        $route.updateParams($routeParams);
+      if (numberOfColumns > $scope.selectedIndex) {
+        $scope.selectedIndex++;
       }
     }
 
     $scope.previousColumn = function() {
-      if ($scope.column_id > 1) {
-        $routeParams.projectColumn = $routeParams.projectColumn * 1 - 1;
-        $route.updateParams($routeParams);
+      if ($scope.selectedIndex > 1) {
+        $scope.selectedIndex--;
       }
     }
 

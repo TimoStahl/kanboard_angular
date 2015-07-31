@@ -1,27 +1,23 @@
 <md-toolbar layout="row"><span ng-include="'view/menu.html'"></span>
-  <md-button ng-disabled="column_id <= 1" ng-click="previousColumn()" class="btn">
-    <ng-md-icon icon="keyboard_arrow_left"></ng-md-icon>
-  </md-button>
-  <h1 class="md-title">{{project_name}} - {{column_name}}</h1>
-  <md-button ng-disabled="column_id >= column_number" ng-click="nextColumn()" class="btn">
-        <ng-md-icon icon="keyboard_arrow_right"></ng-md-icon>
-  </md-button>
+  <h1 class="md-title">{{project_name}}</h1>
 </md-toolbar>
-<div class="demo-swipe" md-swipe-left="nextColumn()" md-swipe-right="previousColumn()">
-  <span ng-repeat="task in tasks" ng-include="'view/task_box.html'">
 
-  </span>
+<div>
+  <md-content class="md-padding" md-swipe-left="nextColumn()" md-swipe-right="previousColumn()">
+    <md-tabs md-dynamic-height md-selected="selectedIndex">
+      
+      <md-tab ng-repeat="column in columns" label="{{column.title}}" >
+        
+        <md-content class="md-padding">
+          <span ng-repeat="task in column.tasks" ng-include="'view/task_box.html'">
+
+          </span>
+        </md-content>
+        
+      </md-tab>
+      
+    </md-tabs>
+  </md-content>
 </div>
-
-<!--<p>ProjectID: {{project_id}}</span>
-</p>
-<p>ProjectName: {{project_name}}</span>
-</p>
-<p>ColumnID: {{column_id}}</span>
-</p>
-<p>ColumnName: {{column_name}}</span>
-</p>
-<p>ColumnNumber: {{column_number}}</span>
-</p>-->
 
 <a href="#/"><md-button>Back</md-button></a>
