@@ -89,6 +89,12 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64', 'pasc
       $location.replace();
       console.log("navi task");
       return;
+    },
+    board: function(api_id, board_id) {
+      $location.path('/' + api_id + '/board/show/' + board_id);
+      $location.replace();
+      console.log("navi board");
+      return;
     }
   }
 }])
@@ -226,13 +232,13 @@ angular.module('project', ['ngRoute', 'ngMaterial', 'ngMdIcons', 'base64', 'pasc
       });
 
     $scope.nextColumn = function() {
-      if (numberOfColumns > $scope.selectedIndex) {
+      if ((numberOfColumns - 1) > $scope.selectedIndex) {
         $scope.selectedIndex++;
       }
     }
 
     $scope.previousColumn = function() {
-      if ($scope.selectedIndex > 1) {
+      if ($scope.selectedIndex > 0) {
         $scope.selectedIndex--;
       }
     }
