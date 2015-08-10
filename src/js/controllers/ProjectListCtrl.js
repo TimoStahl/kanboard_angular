@@ -1,5 +1,5 @@
 angular.module('KanboardCtrl')
-.controller('ProjectListController', function($location, $routeParams, $route, $scope, navigation, dataFactory) {
+.controller('ProjectListController', function($scope, navigation, dataFactory) {
   $scope.$navigation = navigation;
   var projectList = this;
 

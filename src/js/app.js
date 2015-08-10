@@ -1,76 +1,73 @@
 angular.module('Kanboard')
 
-.config( [
-    '$compileProvider',
-    function( $compileProvider )
-    {   
-        $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
-        // Angular before v1.2 uses $compileProvider.urlSanitizationWhitelist(...)
-    }
-])
-.config(function($translateProvider) {
-   
-    $translateProvider.registerAvailableLanguageKeys(['en','de'], {
+  .config(function($compileProvider) {
+    $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|file|chrome-extension):/);
+  })
+  
+  .config(function($translateProvider) {
+
+    $translateProvider.registerAvailableLanguageKeys(['en', 'de'], {
         'en_US': 'en',
         'en_UK': 'en',
         'de_DE': 'de',
         'de_CH': 'de',
         'de_AT': 'de'
-    })
-    .determinePreferredLanguage()
-    .fallbackLanguage('en')
-    .useStaticFilesLoader({
+      })
+      .determinePreferredLanguage()
+      .fallbackLanguage('en')
+      .useStaticFilesLoader({
         prefix: 'translation/',
         suffix: '.json'
-    });
-})
-.config(function($routeProvider) {
-  $routeProvider
-    .when('/', {
-      controller: 'ProjectListController as projectList',
-      templateUrl: 'view/project_list.html'
-    })
-    .when('/settings', {
-      controller: 'SettingsController as settings',
-      templateUrl: 'view/settings.html'
-    })
-    .when('/settings/endpoint', {
-      controller: 'SettingsEndpointController as settings',
-      templateUrl: 'view/settings_endpoint.html'
-    })
-    .when('/settings/endpoint/:api_id', {
-      controller: 'SettingsEndpointController as settings',
-      templateUrl: 'view/settings_endpoint.html'
-    })
-    .when('/:api_id/board/show/:projectId', {
-      controller: 'ShowProjectController as showProject',
-      templateUrl: 'view/board_show.html'
-    })
-    .when('/:api_id/task/show/:taskId', {
-      controller: 'ShowTaskController as showTask',
-      templateUrl: 'view/task_details.html'
-    })
-    .when('/:api_id/board/overdue/:projectId', {
-      controller: 'ShowOverdueController as overdueBoard',
-      templateUrl: 'view/board_overdue.html'
-    })
-    .otherwise({
-      redirectTo: '/'
-    });
-})
+      });
+  })
+  
+  .config(function($routeProvider) {
+    $routeProvider
+      .when('/', {
+        controller: 'ProjectListController',
+        templateUrl: 'view/project_list.html'
+      })
+      .when('/settings', {
+        controller: 'SettingsController',
+        templateUrl: 'view/settings.html'
+      })
+      .when('/settings/endpoint', {
+        controller: 'SettingsEndpointController',
+        templateUrl: 'view/settings_endpoint.html'
+      })
+      .when('/settings/endpoint/:api_id', {
+        controller: 'SettingsEndpointController',
+        templateUrl: 'view/settings_endpoint.html'
+      })
+      .when('/:api_id/board/show/:projectId', {
+        controller: 'ShowProjectController',
+        templateUrl: 'view/board_show.html'
+      })
+      .when('/:api_id/task/show/:taskId', {
+        controller: 'ShowTaskController',
+        templateUrl: 'view/task_details.html'
+      })
+      .when('/:api_id/board/overdue/:projectId', {
+        controller: 'ShowOverdueController',
+        templateUrl: 'view/board_overdue.html'
+      })
+      .otherwise({
+        redirectTo: '/'
+      });
+  })
 
-.factory('navigation', ['$location', '$rootScope', function($location, $rootScope) {
+.factory('navigation', ['$location', function($location) {
   return {
     home: function() {
       $location.path('/');
       $location.replace();
-      console.log("navi home");
+      console.log("Navigation: home");
       return;
     },
     settings: function() {
       $location.path('/settings');
       $location.replace();
-      console.log("navi settings");
+      console.log("Navigation: settings");
       return;
     },
     settings_endpoint: function(api_id) {
@@ -81,19 +78,19 @@ angular.module('Kanboard')
         $location.path('/settings/endpoint');
       }
       $location.replace();
-      console.log("navi settings endpoint");
+      console.log("Navigation: settings_endpoint");
       return;
     },
     task: function(api_id, task_id) {
       $location.path('/' + api_id + '/task/show/' + task_id);
       $location.replace();
-      console.log("navi task");
+      console.log("Navigation: task");
       return;
     },
     board: function(api_id, board_id) {
       $location.path('/' + api_id + '/board/show/' + board_id);
       $location.replace();
-      console.log("navi board");
+      console.log("Navigation: board");
       return;
     }
   }
@@ -173,7 +170,6 @@ angular.module('Kanboard')
     var request = '{"jsonrpc": "2.0", "method": "getOverdueTasks", "id": ' + api_id + '}';
     return $http.post(this.getBaseUrl(api_id) + '?getOverdueTasks', request, this.createConfig(api_id));
   };
-
 
   return dataFactory;
 }]);

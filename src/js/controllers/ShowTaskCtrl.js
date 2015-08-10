@@ -1,5 +1,5 @@
  angular.module('KanboardCtrl')
- .controller('ShowTaskController', function($location, $routeParams, $route, $scope, navigation, dataFactory) {
+ .controller('ShowTaskController', function($routeParams, $scope, navigation, dataFactory) {
     $scope.$navigation = navigation;
 
     var api_id = parseInt($routeParams.api_id) + 1;

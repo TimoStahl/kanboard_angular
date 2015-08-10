@@ -1,5 +1,5 @@
 angular.module('KanboardCtrl')
-.controller('ShowOverdueController', function($location, $routeParams, $route, $scope, navigation, dataFactory) {
+.controller('ShowOverdueController', function($routeParams, $scope, navigation, dataFactory) {
     $scope.$navigation = navigation;
     var project_id = $routeParams.projectId;
 

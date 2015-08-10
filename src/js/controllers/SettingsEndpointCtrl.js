@@ -1,5 +1,5 @@
 angular.module('KanboardCtrl')
-.controller('SettingsEndpointController', function($location, $routeParams, $route, $scope, navigation, dataFactory, $mdDialog, $mdToast) {
+.controller('SettingsEndpointController', function($routeParams, $scope, navigation, dataFactory) {
     $scope.$navigation = navigation;
     var items;
 
@@ -11,8 +11,6 @@ angular.module('KanboardCtrl')
     } else {
       $scope.edit = false;
     }
-
-    
 
     $scope.save = function() {
       if ($scope.endpoint.id >= 0) {

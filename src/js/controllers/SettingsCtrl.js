@@ -1,5 +1,5 @@
 angular.module('KanboardCtrl')
-.controller('SettingsController', function($location, $routeParams, $route, $scope, navigation, dataFactory, $mdDialog, $mdToast) {
+.controller('SettingsController', function($scope, navigation, dataFactory, $mdDialog, $mdToast) {
     $scope.$navigation = navigation;
 
     var items = dataFactory.getEndpoints();
