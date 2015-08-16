@@ -55,6 +55,10 @@ angular.module('Kanboard')
         controller: 'ShowOverdueController',
         templateUrl: 'view/board_overdue.html'
       })
+      .when('/:api_id/board/activity/:projectId', {
+        controller: 'ShowActivityController',
+        templateUrl: 'view/board_activity.html'
+      })
       .otherwise({
         redirectTo: '/projectlist'
       });
@@ -92,47 +96,42 @@ angular.module('Kanboard')
   .factory('navigation', ['$location', function($location) {
     return {
       home: function() {
-        $location.path('/projectlist');
-        $location.replace();
         console.log("Navigation: home/projectlist");
+        $location.path('/projectlist').replace();        
         return;
       },
       settings: function() {
-        $location.path('/settings');
-        $location.replace();
         console.log("Navigation: settings");
+        $location.path('/settings').replace();
         return;
       },
       settings_endpoint: function(api_id) {
+        console.log("Navigation: settings_endpoint");
         if (api_id >= 0) {
           $location.path('/settings/endpoint/' + api_id);
         }
         else {
           $location.path('/settings/endpoint');
         }
-        $location.replace();
-        console.log("Navigation: settings_endpoint");
+        $location.replace();        
         return;
       },
       task: function(api_id, task_id) {
-        $location.path('/' + api_id + '/task/show/' + task_id);
-        $location.replace();
         console.log("Navigation: task");
+        $location.path('/' + api_id + '/task/show/' + task_id).replace();       
         return;
       },
       board: function(api_id, board_id, column_id, reload) {
+        console.log("Navigation: board");
         if(!column_id){
             column_id = 0;
         }
-        $location.path('/' + api_id + '/board/show/' + board_id + '/' + column_id, reload);
-        $location.replace();
-        console.log("Navigation: board");
+        $location.path('/' + api_id + '/board/show/' + board_id + '/' + column_id, reload).replace();        
         return;
       },
       url: function(url) {
-        $location.path(url);
-        $location.replace();
         console.log("Navigation: url => " + url);
+        $location.path(url).replace();        
         return;
       },
       extern_url: function(url) {        
@@ -142,6 +141,16 @@ angular.module('Kanboard')
       },
       back: function(){
           window.history.back();
+      },
+      board_activity: function(api_id, board_id) {
+        console.log("Navigation: board activity");
+        $location.path('/' + api_id + '/board/activity/' + board_id).replace();
+        return;
+      },
+      board_overdue: function(api_id, board_id) {
+        console.log("Navigation: board overdue");
+        $location.path('/' + api_id + '/board/overdue/' + board_id).replace();        
+        return;
       }
     }
   }])
@@ -230,6 +239,11 @@ angular.module('Kanboard')
   dataFactory.getOverdueTasks = function(api_id) {
     var request = '{"jsonrpc": "2.0", "method": "getOverdueTasks", "id": ' + api_id + '}';
     return $http.post(this.getBaseUrl(api_id) + '?getOverdueTasks', request, this.createConfig(api_id));
+  };
+  
+  dataFactory.getProjectActivity = function(api_id, project_id) {
+    var request = '{"jsonrpc": "2.0", "method": "getProjectActivity", "id": ' + api_id + ',"params": { "project_id": ' + project_id + ' }}';
+    return $http.post(this.getBaseUrl(api_id) + '?getProjectActivity', request, this.createConfig(api_id));
   };
 
   return dataFactory;
