@@ -70,13 +70,14 @@ angular.module('Kanboard')
       function(a) {
         // url changed
         var settings = dataFactory.getSettings();
-        if (settings.rememberLastPage) {
-          if (a != '/lasturl') {
-            settings.lastVisitedUrl = a;
+        if (a != '/lasturl') {
+            settings.lastVisitedUrl = settings.currentUrl;
+            settings.currentUrl = a;
             dataFactory.setSettings(settings);
-          } else {
-            navigation.url(settings.lastVisitedUrl);
-          }
+        } else {
+            if (settings.rememberLastPage) {
+                navigation.url(settings.currentUrl);
+            }          
         }
       });
     //fix https://github.com/angular/angular.js/issues/1699  
@@ -93,7 +94,7 @@ angular.module('Kanboard')
             return original.apply($location, [path]);
         };  
   })
-  .factory('navigation', ['$location', function($location) {
+  .factory('navigation', ['$location', 'dataFactory', function($location, dataFactory) {
     return {
       home: function() {
         console.log("Navigation: home/projectlist");
@@ -140,7 +141,9 @@ angular.module('Kanboard')
         return;
       },
       back: function(){
-          window.history.back();
+          var settings = dataFactory.getSettings();       
+          this.url(settings.lastVisitedUrl);
+          //window.history.back();
       },
       board_activity: function(api_id, board_id) {
         console.log("Navigation: board activity");
