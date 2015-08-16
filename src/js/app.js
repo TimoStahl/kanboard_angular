@@ -43,6 +43,10 @@ angular.module('Kanboard')
         controller: 'ShowProjectController',
         templateUrl: 'view/board_show.html'
       })
+      .when('/:api_id/board/show/:projectId/:columnId', {
+        controller: 'ShowProjectController',
+        templateUrl: 'view/board_show.html'
+      })
       .when('/:api_id/task/show/:taskId', {
         controller: 'ShowTaskController',
         templateUrl: 'view/task_details.html'
@@ -103,8 +107,11 @@ angular.module('Kanboard')
         console.log("Navigation: task");
         return;
       },
-      board: function(api_id, board_id) {
-        $location.path('/' + api_id + '/board/show/' + board_id);
+      board: function(api_id, board_id, column_id) {
+        if(!column_id){
+            column_id = 0;
+        }
+        $location.path('/' + api_id + '/board/show/' + board_id + '/' + column_id);
         $location.replace();
         console.log("Navigation: board");
         return;
@@ -114,6 +121,9 @@ angular.module('Kanboard')
         $location.replace();
         console.log("Navigation: url => " + url);
         return;
+      },
+      back: function(){
+          window.history.back();
       }
     }
   }])
