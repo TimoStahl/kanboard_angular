@@ -1,5 +1,5 @@
 angular.module('KanboardCtrl')
-.controller('ShowProjectController', function($routeParams, $scope, navigation, dataFactory) {
+.controller('ShowBoardController', function($routeParams, $scope, navigation, dataFactory) {
     $scope.$navigation = navigation;
     $scope.project_id = $routeParams.projectId;
     $scope.selectedIndex = 0;

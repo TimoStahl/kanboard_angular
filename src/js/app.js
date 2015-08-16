@@ -40,11 +40,11 @@ angular.module('Kanboard')
         templateUrl: 'view/settings_endpoint.html'
       })
       .when('/:api_id/board/show/:projectId', {
-        controller: 'ShowProjectController',
+        controller: 'ShowBoardController',
         templateUrl: 'view/board_show.html'
       })
       .when('/:api_id/board/show/:projectId/:columnId', {
-        controller: 'ShowProjectController',
+        controller: 'ShowBoardController',
         templateUrl: 'view/board_show.html'
       })
       .when('/:api_id/task/show/:taskId', {
