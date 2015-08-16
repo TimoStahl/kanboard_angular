@@ -1,5 +1,8 @@
-<md-toolbar layout="row"><span ng-include="'view/menu.html'"></span>
-  <h1 class="md-title">{{project_name}}</h1>
+<md-toolbar layout="row">
+    <span ng-include="'view/menu.html'"></span>
+    <h1 class="md-title">{{project.name}}</h1>
+    <span flex></span>
+    <ng-md-icon icon="open_in_browser" ng-click="$navigation.extern_url(project.url.board)"></ng-md-icon>
 </md-toolbar>
 
 <div>

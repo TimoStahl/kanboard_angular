@@ -59,7 +59,7 @@ angular.module('Kanboard')
         redirectTo: '/projectlist'
       });
   })
-  .run(function($rootScope, $location, dataFactory, navigation) {
+  .run(function($rootScope, $location, $route, dataFactory, navigation) {
     $rootScope.$watch(function() {
         return $location.path();
       },
@@ -75,6 +75,19 @@ angular.module('Kanboard')
           }
         }
       });
+    //fix https://github.com/angular/angular.js/issues/1699  
+    var original = $location.path;
+        $location.path = function (path, reload) {
+            if (reload === false) {
+                var lastRoute = $route.current;
+                var un = $rootScope.$on('$locationChangeSuccess', function () {
+                    $route.current = lastRoute;
+                    un();
+                });
+            }
+
+            return original.apply($location, [path]);
+        };  
   })
   .factory('navigation', ['$location', function($location) {
     return {
@@ -107,11 +120,11 @@ angular.module('Kanboard')
         console.log("Navigation: task");
         return;
       },
-      board: function(api_id, board_id, column_id) {
+      board: function(api_id, board_id, column_id, reload) {
         if(!column_id){
             column_id = 0;
         }
-        $location.path('/' + api_id + '/board/show/' + board_id + '/' + column_id);
+        $location.path('/' + api_id + '/board/show/' + board_id + '/' + column_id, reload);
         $location.replace();
         console.log("Navigation: board");
         return;
@@ -120,6 +133,11 @@ angular.module('Kanboard')
         $location.path(url);
         $location.replace();
         console.log("Navigation: url => " + url);
+        return;
+      },
+      extern_url: function(url) {        
+        console.log("Navigation: url => " + url);
+        window.open(url,"_blank")
         return;
       },
       back: function(){
