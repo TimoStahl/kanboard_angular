@@ -229,11 +229,6 @@ angular.module('Kanboard')
     return $http.post(this.getBaseUrl(api_id) + '?getProjectById', request, this.createConfig(api_id));
   };
 
-  dataFactory.getProjectActivity = function(api_id, projectid) {
-    var request = '{"jsonrpc": "2.0", "method": "getProjectActivity", "id": ' + api_id + ',"params": { "project_id": ' + projectid + ' }}';
-    return $http.post(this.getBaseUrl(api_id) + '?getProjectActivity', request, this.createConfig(api_id));
-  };
-
   dataFactory.getTaskById = function(api_id, taskid) {
     var request = '{"jsonrpc": "2.0", "method": "getTask", "id": ' + api_id + ',"params": { "task_id": ' + taskid + ' }}';
     return $http.post(this.getBaseUrl(api_id) + '?getTask', request, this.createConfig(api_id));
