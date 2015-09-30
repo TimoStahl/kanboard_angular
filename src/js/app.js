@@ -170,16 +170,20 @@ angular.module('Kanboard')
         "i": "0",
         "name": "Kanboard.net Demopage",
         "token": "da2776e2c7ca07b2b1169099550aa4a197024f2f7aac21212682240acc3f",
-        "url": "http://demo.kanboard.net/jsonrpc.php"
+        "url": "http://demo.kanboard.net/jsonrpc.php",
+        "user": "jsonrpc"
       }];
     }
     else {
       items = JSON.parse(items);
       for (var i = 0; i < items.length; i++) {
         items[i].id = i;
+        if(items[i].user === undefined || items[i].user == ""){
+          items[i].user = "jsonrpc";
+        }
       }
     }
-
+    
     return items;
   };
 
@@ -205,7 +209,7 @@ angular.module('Kanboard')
 
   dataFactory.createConfig = function(api_id) {
     var api_config = this.getEndpoints()[api_id - 1];
-    var auth = $base64.encode('jsonrpc' + ':' + api_config.token);
+    var auth = $base64.encode(api_config.user + ':' + api_config.token);
     var config = {
       headers: {
         'Authorization': 'Basic ' + auth
@@ -215,7 +219,12 @@ angular.module('Kanboard')
   };
 
   dataFactory.getProjects = function(api_id) {
-    var request = '{"jsonrpc": "2.0", "method": "getAllProjects", "id": ' + api_id + '}';
+    var api_config = this.getEndpoints()[api_id - 1];
+    if(api_config.user == 'jsonrpc'){
+      var request = '{"jsonrpc": "2.0", "method": "getAllProjects", "id": ' + api_id + '}';
+    } else {
+      var request = '{"jsonrpc": "2.0", "method": "getMyProjectsList", "id": ' + api_id + '}';
+    }
     return $http.post(this.getBaseUrl(api_id) + '?getAllProjects', request, this.createConfig(api_id));
   };
 
