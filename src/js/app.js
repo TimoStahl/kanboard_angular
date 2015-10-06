@@ -64,6 +64,28 @@ angular.module('Kanboard')
       });
   })
   .run(function($rootScope, $location, $route, dataFactory, navigation) {
+
+    //check if settings are availiable
+    var settings = dataFactory.getSettings();
+    if (settings === null) {
+      //create settings in local storage
+      settings = new Object();
+    }
+
+    if (!("currentUrl" in settings)) {
+      //currenturl missing
+      settings.currentUrl = $location.path();
+    }
+    if (!("rememberLastPage" in settings)) {
+      //rememberLastPage missing
+      settings.rememberLastPage = false;
+    }
+    if (!("lastVisitedUrl" in settings)) {
+      //lastVisitedUrl missing
+      settings.lastVisitedUrl = $location.path();
+    }
+    dataFactory.setSettings(settings);
+
     $rootScope.$watch(function() {
         return $location.path();
       },
@@ -71,34 +93,35 @@ angular.module('Kanboard')
         // url changed
         var settings = dataFactory.getSettings();
         if (a != '/lasturl') {
-            settings.lastVisitedUrl = settings.currentUrl;
-            settings.currentUrl = a;
-            dataFactory.setSettings(settings);
-        } else {
-            if (settings.rememberLastPage) {
-                navigation.url(settings.currentUrl);
-            }          
+          settings.lastVisitedUrl = settings.currentUrl;
+          settings.currentUrl = a;
+          dataFactory.setSettings(settings);
+        }
+        else {
+          if (settings.rememberLastPage) {
+            navigation.url(settings.currentUrl);
+          }
         }
       });
     //fix https://github.com/angular/angular.js/issues/1699  
     var original = $location.path;
-        $location.path = function (path, reload) {
-            if (reload === false) {
-                var lastRoute = $route.current;
-                var un = $rootScope.$on('$locationChangeSuccess', function () {
-                    $route.current = lastRoute;
-                    un();
-                });
-            }
+    $location.path = function(path, reload) {
+      if (reload === false) {
+        var lastRoute = $route.current;
+        var un = $rootScope.$on('$locationChangeSuccess', function() {
+          $route.current = lastRoute;
+          un();
+        });
+      }
 
-            return original.apply($location, [path]);
-        };  
+      return original.apply($location, [path]);
+    };
   })
   .factory('navigation', ['$location', 'dataFactory', function($location, dataFactory) {
     return {
       home: function() {
         console.log("Navigation: home/projectlist");
-        $location.path('/projectlist').replace();        
+        $location.path('/projectlist').replace();
         return;
       },
       settings: function() {
@@ -114,36 +137,36 @@ angular.module('Kanboard')
         else {
           $location.path('/settings/endpoint');
         }
-        $location.replace();        
+        $location.replace();
         return;
       },
       task: function(api_id, task_id) {
         console.log("Navigation: task");
-        $location.path('/' + api_id + '/task/show/' + task_id).replace();       
+        $location.path('/' + api_id + '/task/show/' + task_id).replace();
         return;
       },
       board: function(api_id, board_id, column_id, reload) {
         console.log("Navigation: board");
-        if(!column_id){
-            column_id = 0;
+        if (!column_id) {
+          column_id = 0;
         }
-        $location.path('/' + api_id + '/board/show/' + board_id + '/' + column_id, reload).replace();        
+        $location.path('/' + api_id + '/board/show/' + board_id + '/' + column_id, reload).replace();
         return;
       },
       url: function(url) {
         console.log("Navigation: url => " + url);
-        $location.path(url).replace();        
+        $location.path(url).replace();
         return;
       },
-      extern_url: function(url) {        
+      extern_url: function(url) {
         console.log("Navigation: url => " + url);
-        window.open(url,"_blank")
+        window.open(url, "_blank")
         return;
       },
-      back: function(){
-          var settings = dataFactory.getSettings();       
-          this.url(settings.lastVisitedUrl);
-          //window.history.back();
+      back: function() {
+        var settings = dataFactory.getSettings();
+        this.url(settings.lastVisitedUrl);
+        //window.history.back();
       },
       board_activity: function(api_id, board_id) {
         console.log("Navigation: board activity");
@@ -152,7 +175,7 @@ angular.module('Kanboard')
       },
       board_overdue: function(api_id, board_id) {
         console.log("Navigation: board overdue");
-        $location.path('/' + api_id + '/board/overdue/' + board_id).replace();        
+        $location.path('/' + api_id + '/board/overdue/' + board_id).replace();
         return;
       }
     }
@@ -178,12 +201,12 @@ angular.module('Kanboard')
       items = JSON.parse(items);
       for (var i = 0; i < items.length; i++) {
         items[i].id = i;
-        if(items[i].user === undefined || items[i].user == ""){
+        if (items[i].user === undefined || items[i].user == "") {
           items[i].user = "jsonrpc";
         }
       }
     }
-    
+
     return items;
   };
 
@@ -220,9 +243,10 @@ angular.module('Kanboard')
 
   dataFactory.getProjects = function(api_id) {
     var api_config = this.getEndpoints()[api_id - 1];
-    if(api_config.user == 'jsonrpc'){
+    if (api_config.user == 'jsonrpc') {
       var request = '{"jsonrpc": "2.0", "method": "getAllProjects", "id": ' + api_id + '}';
-    } else {
+    }
+    else {
       var request = '{"jsonrpc": "2.0", "method": "getMyProjectsList", "id": ' + api_id + '}';
     }
     return $http.post(this.getBaseUrl(api_id) + '?getAllProjects', request, this.createConfig(api_id));
@@ -247,7 +271,7 @@ angular.module('Kanboard')
     var request = '{"jsonrpc": "2.0", "method": "getOverdueTasks", "id": ' + api_id + '}';
     return $http.post(this.getBaseUrl(api_id) + '?getOverdueTasks', request, this.createConfig(api_id));
   };
-  
+
   dataFactory.getProjectActivity = function(api_id, project_id) {
     var request = '{"jsonrpc": "2.0", "method": "getProjectActivity", "id": ' + api_id + ',"params": { "project_id": ' + project_id + ' }}';
     return $http.post(this.getBaseUrl(api_id) + '?getProjectActivity', request, this.createConfig(api_id));
