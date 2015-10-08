@@ -71,18 +71,9 @@ angular.module('Kanboard')
       //create settings in local storage
       settings = new Object();
     }
-
-    if (!("currentUrl" in settings)) {
-      //currenturl missing
-      settings.currentUrl = $location.path();
-    }
     if (!("rememberLastPage" in settings)) {
       //rememberLastPage missing
       settings.rememberLastPage = false;
-    }
-    if (!("lastVisitedUrl" in settings)) {
-      //lastVisitedUrl missing
-      settings.lastVisitedUrl = $location.path();
     }
     dataFactory.setSettings(settings);
 
@@ -91,18 +82,11 @@ angular.module('Kanboard')
       },
       function(a) {
         // url changed
-        var settings = dataFactory.getSettings();
-        if (a != '/lasturl') {
-          settings.lastVisitedUrl = settings.currentUrl;
-          settings.currentUrl = a;
-          dataFactory.setSettings(settings);
-        }
-        else {
-          if (settings.rememberLastPage) {
-            navigation.url(settings.currentUrl);
-          }
+        if (a === '/lasturl' && settings.rememberLastPage) {
+          navigation.back();
         }
       });
+
     //fix https://github.com/angular/angular.js/issues/1699  
     var original = $location.path;
     $location.path = function(path, reload) {
@@ -121,28 +105,27 @@ angular.module('Kanboard')
     return {
       home: function() {
         console.log("Navigation: home/projectlist");
-        $location.path('/projectlist').replace();
+        this.go_with_history('/projectlist');
         return;
       },
       settings: function() {
         console.log("Navigation: settings");
-        $location.path('/settings').replace();
+        this.go_with_history('/settings');
         return;
       },
       settings_endpoint: function(api_id) {
         console.log("Navigation: settings_endpoint");
         if (api_id >= 0) {
-          $location.path('/settings/endpoint/' + api_id);
+          this.go_with_history('/settings/endpoint/' + api_id);
         }
         else {
-          $location.path('/settings/endpoint');
+          this.go_with_history('/settings/endpoint');
         }
-        $location.replace();
         return;
       },
       task: function(api_id, task_id) {
         console.log("Navigation: task");
-        $location.path('/' + api_id + '/task/show/' + task_id).replace();
+        this.go_with_history('/' + api_id + '/task/show/' + task_id);
         return;
       },
       board: function(api_id, board_id, column_id, reload) {
@@ -150,32 +133,46 @@ angular.module('Kanboard')
         if (!column_id) {
           column_id = 0;
         }
-        $location.path('/' + api_id + '/board/show/' + board_id + '/' + column_id, reload).replace();
+        this.go_with_history('/' + api_id + '/board/show/' + board_id + '/' + column_id, reload);
         return;
       },
       url: function(url) {
         console.log("Navigation: url => " + url);
-        $location.path(url).replace();
+        this.go_with_history(url);
         return;
       },
       extern_url: function(url) {
         console.log("Navigation: url => " + url);
-        window.open(url, "_blank")
+        window.open(url, "_blank");
         return;
       },
       back: function() {
-        var settings = dataFactory.getSettings();
-        this.url(settings.lastVisitedUrl);
-        //window.history.back();
+        var history = dataFactory.getHistory();
+        var url = $location.path();
+        while (url === $location.path()) {
+          url = history.pop();
+        }
+        console.log("Current: " + $location.path() + " Last: " + url);
+        dataFactory.setHistory(history);
+        console.log("Back to url:" + url);
+        $location.path(url).replace();
+        return;
       },
       board_activity: function(api_id, board_id) {
         console.log("Navigation: board activity");
-        $location.path('/' + api_id + '/board/activity/' + board_id).replace();
+        this.go_with_history('/' + api_id + '/board/activity/' + board_id);
         return;
       },
       board_overdue: function(api_id, board_id) {
         console.log("Navigation: board overdue");
-        $location.path('/' + api_id + '/board/overdue/' + board_id).replace();
+        this.go_with_history('/' + api_id + '/board/overdue/' + board_id);
+        return;
+      },
+      go_with_history: function(url, reload) {
+        var history = dataFactory.getHistory();
+        history.push(url);
+        dataFactory.setHistory(history);
+        $location.path(url, reload).replace();
         return;
       }
     }
@@ -223,6 +220,25 @@ angular.module('Kanboard')
 
   dataFactory.setSettings = function(settings) {
     return localStorage.setItem("settings", JSON.stringify(settings));
+  };
+
+  dataFactory.getHistory = function() {
+    var history = {};
+    history = localStorage.getItem("history");
+    if (history === null) {
+      history = new Array();
+    }
+    else {
+      history = JSON.parse(history);
+    }
+    if (history.length <= 1) {
+      history.push("/projectlist");
+    }
+    return history;
+  };
+
+  dataFactory.setHistory = function(history) {
+    return localStorage.setItem("history", JSON.stringify(history));
   };
 
   dataFactory.getBaseUrl = function(api_id) {
