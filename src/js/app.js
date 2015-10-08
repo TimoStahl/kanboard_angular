@@ -152,9 +152,7 @@ angular.module('Kanboard')
         while (url === $location.path()) {
           url = history.pop();
         }
-        console.log("Current: " + $location.path() + " Last: " + url);
         dataFactory.setHistory(history);
-        console.log("Back to url:" + url);
         $location.path(url).replace();
         return;
       },
@@ -238,6 +236,9 @@ angular.module('Kanboard')
   };
 
   dataFactory.setHistory = function(history) {
+    while (history.length > 50) {
+      history.shift();
+    }
     return localStorage.setItem("history", JSON.stringify(history));
   };
 
