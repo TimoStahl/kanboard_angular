@@ -1,6 +1,6 @@
 /* Chrome Extension
-body {
-    min-width:400px;
+body, html {
+    min-width:600px;
 }*/
 
 .task {
@@ -99,5 +99,3 @@ md-toolbar {
     line-height: 1.6em;
     color: rgba(0,0,0,0.54);
 }
-
-

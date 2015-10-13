@@ -264,7 +264,7 @@ angular.module('Kanboard')
       var request = '{"jsonrpc": "2.0", "method": "getAllProjects", "id": ' + api_id + '}';
     }
     else {
-      var request = '{"jsonrpc": "2.0", "method": "getMyProjectsList", "id": ' + api_id + '}';
+      var request = '{"jsonrpc": "2.0", "method": "getMyProjects", "id": ' + api_id + '}';
     }
     return $http.post(this.getBaseUrl(api_id) + '?getAllProjects', request, this.createConfig(api_id));
   };
@@ -285,7 +285,13 @@ angular.module('Kanboard')
   };
 
   dataFactory.getOverdueTasks = function(api_id) {
-    var request = '{"jsonrpc": "2.0", "method": "getOverdueTasks", "id": ' + api_id + '}';
+    var api_config = this.getEndpoints()[api_id - 1];
+    if (api_config.user == 'jsonrpc') {
+      var request = '{"jsonrpc": "2.0", "method": "getOverdueTasks", "id": ' + api_id + '}';
+    }
+    else {
+      var request = '{"jsonrpc": "2.0", "method": "getMyOverdueTasks", "id": ' + api_id + '}';
+    }
     return $http.post(this.getBaseUrl(api_id) + '?getOverdueTasks', request, this.createConfig(api_id));
   };
 
