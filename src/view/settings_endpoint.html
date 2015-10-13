@@ -20,9 +20,8 @@
 </md-input-container>
 <md-input-container flex>
   <label>{{ 'token' | translate }}</label>
-  <input ng-model="endpoint.token" required>
+  <input type="password" ng-model="endpoint.token">
 </md-input-container>
-
 
 <md-button ng-click="$navigation.settings()">{{ 'cancel' | translate }}</md-button>
 <md-button ng-disabled="epform.$invalid" class="md-raised" ng-click="save()">{{ 'save' | translate }}</md-button>

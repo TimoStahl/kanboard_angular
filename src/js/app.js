@@ -177,7 +177,7 @@ angular.module('Kanboard')
     }
   }])
 
-.factory('dataFactory', ['$base64', '$http', function($base64, $http) {
+.factory('dataFactory', ['$http', function($http) {
 
   var dataFactory = {};
   var request;
@@ -251,10 +251,9 @@ angular.module('Kanboard')
 
   dataFactory.createConfig = function(api_id) {
     var api_config = this.getEndpoints()[api_id - 1];
-    var auth = $base64.encode(api_config.user + ':' + api_config.token);
     var config = {
       headers: {
-        'Authorization': 'Basic ' + auth
+        'Authorization': 'Basic ' + api_config.auth
       }
     };
     return config;
