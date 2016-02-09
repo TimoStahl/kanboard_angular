@@ -15,8 +15,8 @@ angular.module('KanboardCtrl')
     }
 
     $scope.save = function() {
-      console.log($scope.endpoint.token);
-      if (typeof $scope.endpoint.token != 'undefined') {
+      //console.log($scope.endpoint.token);
+      if (typeof $scope.endpoint.token != 'undefined' && typeof $scope.endpoint.user != 'undefined') {
         $scope.endpoint.auth = $base64.encode($scope.endpoint.user + ':' + $scope.endpoint.token);
         delete($scope.endpoint.token);
       }
@@ -28,10 +28,10 @@ angular.module('KanboardCtrl')
         navigation.settings();
       }
       else {
-        if (typeof $scope.endpoint.token == 'undefined') {
+        if (typeof $scope.endpoint.auth == 'undefined') {
           $mdToast.show(
             $mdToast.simple()
-            .content('Please enter password!')
+            .content('Please enter user and password!')
             .hideDelay(3000)
           );
         }
