@@ -31,6 +31,14 @@ angular.module('KanboardCtrl')
         board = request.result;
         $scope.columns = board[0].columns;
         numberOfColumns = board[0].columns.length;
+        for(var i = 1; i < board.length; i++){
+          for(var j = 0; j < board[i].columns.length; j++){
+            for(var k = 0; k < board[i].columns[j].tasks.length; k++){
+              $scope.columns[j].tasks.push(board[i].columns[j].tasks[k]);
+            }
+          }
+        }
+        //console.log($scope.columns[0]);
       })
       .error(function(error) {
         console.log(error);
