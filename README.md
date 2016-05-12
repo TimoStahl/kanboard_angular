@@ -1,17 +1,12 @@
-# kanboard_angular
-Kanboard Angular JS
+# Kanboard Angular JS
 
-Little work in progress Kanboard Mobile App.
+Little Kanboard Mobile/Angular/Javascript App.
 
-You need to run http://bower.io/ to use the app.
+You need to install dependencies with http://bower.io/ to use the app.
 
 
 ## Code used in: 
 
 Chrome extension:
 
-http://github.com/BlueTeck/kanboard_chrome_extension
-
-Android App:
-
-https://github.com/BlueTeck/kanboard_android
+https://github.com/BlueTeck/kanboard_chrome_extension
