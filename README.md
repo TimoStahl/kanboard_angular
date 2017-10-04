@@ -2,10 +2,10 @@
 
 Little Kanboard Mobile/Angular/Javascript App.
 
-You need to install dependencies with http://bower.io/ to use the app.
+You need to install dependencies with https://yarnpkg.com to use the app.
 
 
-## Code used in: 
+## Code used in:
 
 Chrome extension:
 
